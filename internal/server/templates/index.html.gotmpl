@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <title>abcde</title>
+    <style>
+      body {
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      .scroll {
+        max-height: 300px;
+        overflow: scroll;
+      }
+
+      input[type="submit"] {
+        padding: 5px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>abcde</h1>
+    {{ if eq false .IsRipping }}
+    <form method="post" action="/api/v1/rip">
+      <input type="submit" value="Rip" />
+    </form>
+    {{ end }}
+    <h2>Logs</h2>
+    <hr />
+    <div class="scroll">
+      <pre><code>
+       {{ .Logs }}
+      </code></pre>
+    </div>
+    <h2>Error logs</h2>
+    <hr />
+    <div class="scroll">
+      <pre><code>
+       {{ .Error }}
+      </code></pre>
+    </div>
+  </body>
+</html>
