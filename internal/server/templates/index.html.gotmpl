@@ -15,11 +15,6 @@
         padding: 0;
       }
 
-      .scroll {
-        max-height: 300px;
-        overflow: scroll;
-      }
-
       input[type="submit"] {
         padding: 5px 10px;
       }
@@ -32,19 +27,30 @@
       <input type="submit" value="Rip" />
     </form>
     {{ end }}
-    <h2>Logs</h2>
+    <h2>{{ .Info.Album }}</h2>
     <hr />
-    <div class="scroll">
-      <pre><code>
-       {{ .Logs }}
-      </code></pre>
-    </div>
-    <h2>Error logs</h2>
+    Progress: {{ len .Info.Ripped }} / {{ .Info.TotalTracks }}.
+    <ol>
+      {{ range $v := .Info.Ripped }}
+        <li>{{ $v }} ✅</li>
+      {{ end }}
+      {{ if not (eq "" .Info.Ripping) }}
+        <li>{{ .Info.Ripping }} 💿</li>
+      {{ end }}
+    </ol>
+    <h2>Advanced</h2>
     <hr />
-    <div class="scroll">
+    <details>
+      <summary>Errors ({{ .ErrorLines }})</summary>
       <pre><code>
        {{ .Error }}
       </code></pre>
-    </div>
+    </details>
+    <details>
+      <summary>Logs ({{ .LogLines }})</summary>
+      <pre><code>
+      {{ .Logs }}
+      </code></pre>
+    </details>
   </body>
 </html>

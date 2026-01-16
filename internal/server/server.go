@@ -4,7 +4,6 @@ import (
 	"log/slog"
 	"net/http"
 	"net/url"
-	"text/template"
 
 	"github.com/AlexGustafsson/abcde-ui/internal/abcde"
 )
@@ -15,8 +14,14 @@ type Server struct {
 
 type Data struct {
 	IsRipping bool
-	Error     string
-	Logs      string
+
+	Error      string
+	ErrorLines int
+
+	Logs     string
+	LogLines int
+
+	Info abcde.LogInfo
 }
 
 func NewServer(runner *abcde.Runner) *Server {
@@ -25,26 +30,12 @@ func NewServer(runner *abcde.Runner) *Server {
 	}
 
 	s.mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		t, err := template.ParseFS(templates, "templates/index.html.gotmpl")
-		if err != nil {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-			return
-		}
-
-		errString := ""
-		if err := runner.Error(); err != nil {
-			errString = err.Error()
-		}
-		data := &Data{
-			IsRipping: runner.Running(),
-			Error:     errString,
-			Logs:      runner.Output(),
-		}
-
 		w.Header().Set("Content-Type", "text/html")
-		if err := t.Execute(w, data); err != nil {
+		err := Render(w, runner.Running(), runner.Output(), runner.Error())
+		if err != nil {
 			slog.Error("Failed to render template", slog.Any("error", err))
-			// Fallthrough
+			w.Write([]byte("<html><body>Failed to render template</body></html>"))
+			return
 		}
 	})
 

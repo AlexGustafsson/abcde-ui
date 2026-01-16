@@ -1,0 +1,99 @@
+
+       whoami: cannot find name for user ID 2000
+Grabbing entire CD - tracks:  01 02 03 04 05 06 07 08 09
+abcde: attempting to resume from /var/data/abcde.172ab421..
+.
+Retrieved 3 matches...
+#1 (Musicbrainz): ---- Some album ----
+1: Woopelo
+2: Jumpidopido
+3: Untitled
+4: Song #4
+5: The Number Five
+6: Disco Six
+7: Blind John
+8: Backwards 8
+9: Woopelo (Single Version)
+
+#2 (Musicbrainz): ---- Some album ----
+1: Woopelo
+2: Jumpidopido
+3: Train Long‐Suffering
+4: Song #4
+5: Knockin’ on Joe
+6: Disco Six
+7: Blind John
+8: Backwards 8
+9: Woopelo (Single Version)
+
+#3 (Musicbrainz): ---- Some album ----
+1: Woopelo
+2: Jumpidopido
+3: Untitled
+4: Song #4
+5: The Number Five
+6: Disco Six
+7: Blind John
+8: Backwards 8
+9: Woopelo (Single Version)
+
+Selected: #1 (Some album)
+Edit selected CDDB data [y/N]?
+Is the CD multi-artist [y/N]? n
+Grabbing track 01: Woopelo...
+cdparanoia III release 10.2 (September 11, 2008)
+
+Ripping from sector       0 (track  1 [0:00.00])
+	  to sector   32836 (track  1 [7:17.61])
+
+outputting to /var/data/abcde.172ab421/track01.wav
+
+
+
+Done.
+
+
+Grabbing track 02: Jumpidopido...
+cdparanoia III release 10.2 (September 11, 2008)
+
+Ripping from sector   32837 (track  2 [0:00.00])
+	  to sector   56111 (track  2 [5:10.24])
+
+outputting to /var/data/abcde.172ab421/track02.wav
+
+
+
+Done.
+
+
+Grabbing track 03: Untitled...
+cdparanoia III release 10.2 (September 11, 2008)
+
+Ripping from sector   56112 (track  3 [0:00.00])
+	  to sector   73291 (track  3 [3:49.04])
+
+outputting to /var/data/abcde.172ab421/track03.wav
+
+
+
+Done.
+
+
+Grabbing track 04: Song #4...
+cdparanoia III release 10.2 (September 11, 2008)
+
+Ripping from sector   73292 (track  4 [0:00.00])
+	  to sector   96226 (track  4 [5:05.59])
+
+outputting to /var/data/abcde.172ab421/track04.wav
+
+
+
+Done.
+
+
+Grabbing track 05: The Number Five...
+cdparanoia III release 10.2 (September 11, 2008)
+
+Ripping from sector   96227 (track  5 [0:00.00])
+	  to sector  130631 (track  5 [7:38.54])
