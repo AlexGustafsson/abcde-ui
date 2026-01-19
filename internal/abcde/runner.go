@@ -1,6 +1,8 @@
 package abcde
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
 	"log/slog"
 	"os"
@@ -23,7 +25,7 @@ type Runner struct {
 	err    error
 }
 
-func (r *Runner) Start() error {
+func (r *Runner) Start(fallback string) error {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
 
@@ -50,6 +52,12 @@ func (r *Runner) Start() error {
 		err := cmd.Wait()
 		if err == nil {
 			slog.Info("Ran abcde successfully")
+
+			// Move the default unknown output directory to a unique one as it would
+			// otherwise be overwritten by abcde
+			var buf [5]byte
+			_, _ = rand.Read(buf[:])
+			_ = os.Rename("Unknown_Artist-Unknown_Album", "Unknown_Artist-Unknown_Album-"+strings.ReplaceAll(fallback, " ", "_")+hex.EncodeToString(buf[:]))
 		} else {
 			slog.Error("Failed to run abcde", slog.Any("error", err))
 			// Fallthrough

@@ -24,6 +24,7 @@
     <h1>abcde</h1>
     {{ if eq false .IsRipping }}
     <form method="post" action="/api/v1/rip">
+      <input type="text" name="fallback" placeholder="fallback name" />
       <input type="submit" value="Rip" />
     </form>
     {{ end }}

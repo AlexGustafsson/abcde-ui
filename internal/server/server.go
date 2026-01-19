@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -40,7 +41,15 @@ func NewServer(runner *abcde.Runner) *Server {
 	})
 
 	s.mux.HandleFunc("POST /api/v1/rip", func(w http.ResponseWriter, r *http.Request) {
-		err := runner.Start()
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+
+		fallback := r.FormValue("fallback")
+		fmt.Println(fallback)
+
+		err := runner.Start(fallback)
 
 		query := make(url.Values)
 		switch err {
