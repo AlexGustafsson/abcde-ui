@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"net/url"
@@ -47,7 +46,6 @@ func NewServer(runner *abcde.Runner) *Server {
 		}
 
 		fallback := r.FormValue("fallback")
-		fmt.Println(fallback)
 
 		err := runner.Start(fallback)
 
