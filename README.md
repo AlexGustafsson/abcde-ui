@@ -57,6 +57,8 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/data
+            - name: tmp
+              mountPath: /tmp
           ports:
             - name: web
               containerPort: 8080
@@ -69,6 +71,8 @@ spec:
         - name: data
           hostPath:
             path: /home/example/media
+        - name: tmp
+          emptyDir: {}
 ---
 # ...service
 # ...ingress(es)
