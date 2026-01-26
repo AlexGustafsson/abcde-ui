@@ -20,7 +20,7 @@ func main() {
 	}
 
 	server := &http.Server{
-		Addr:    ":8082",
+		Addr:    ":8080",
 		Handler: server.NewServer(runner),
 	}
 
