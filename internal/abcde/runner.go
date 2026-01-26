@@ -25,7 +25,9 @@ type Runner struct {
 	// GrapevineEndpoint specifies a Grapvine-compatible notification endpoint.
 	// Optional.
 	GrapevineEndpoint string
-	GrapevineTopic    string
+	// GrapevineTopic is the topic to use with Grapevine.
+	// Optional. Defaults to "abcde-ui".
+	GrapevineTopic string
 
 	mutex  sync.Mutex
 	cmd    *exec.Cmd
@@ -75,10 +77,15 @@ func (r *Runner) Start(fallback string) error {
 					body = "There was an issue with abcde"
 				}
 
+				topic := r.GrapevineTopic
+				if topic == "" {
+					topic = "abcde-ui"
+				}
+
 				err := grapevine.SendNotification(
 					ctx,
 					endpoint,
-					"abcde-ui",
+					topic,
 					grapevine.Notification{
 						TTL:     3600,
 						Urgency: grapevine.UrgencyNormal,
