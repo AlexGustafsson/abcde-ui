@@ -1,6 +1,7 @@
 package abcde
 
 import (
+	"context"
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
@@ -9,6 +10,9 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
+
+	"github.com/AlexGustafsson/abcde-ui/internal/grapevine"
 )
 
 var (
@@ -18,6 +22,10 @@ var (
 type Runner struct {
 	// Dir specifies the working directory of the command.
 	Dir string
+	// GrapevineEndpoint specifies a Grapvine-compatible notification endpoint.
+	// Optional.
+	GrapevineEndpoint string
+	GrapevineTopic    string
 
 	mutex  sync.Mutex
 	cmd    *exec.Cmd
@@ -50,6 +58,41 @@ func (r *Runner) Start(fallback string) error {
 
 	go func() {
 		err := cmd.Wait()
+
+		if endpoint := r.GrapevineEndpoint; endpoint != "" {
+			go func() {
+				ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+				defer cancel()
+
+				title := ""
+				body := ""
+
+				if err == nil {
+					title = "Successful rip"
+					body = "abcde exited successfully"
+				} else {
+					title = "Unsuccessful rip"
+					body = "There was an issue with abcde"
+				}
+
+				err := grapevine.SendNotification(
+					ctx,
+					endpoint,
+					"abcde-ui",
+					grapevine.Notification{
+						TTL:     3600,
+						Urgency: grapevine.UrgencyNormal,
+						Title:   title,
+						Body:    body,
+					},
+				)
+				if err != nil {
+					slog.Warn("Failed to send notification to Grapvine", slog.Any("error", err))
+					// Fallthrough
+				}
+			}()
+		}
+
 		if err == nil {
 			slog.Info("Ran abcde successfully")
 

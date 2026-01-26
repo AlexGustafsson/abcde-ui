@@ -14,11 +14,13 @@ import (
 
 func main() {
 	runner := &abcde.Runner{
-		Dir: ".",
+		Dir:               ".",
+		GrapevineEndpoint: os.Getenv("ABCDE_UI_GRAPEVINE_ENDPOINT"),
+		GrapevineTopic:    os.Getenv("ABCDE_UI_GRAPEVINE_TOPIC"),
 	}
 
 	server := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8082",
 		Handler: server.NewServer(runner),
 	}
 
