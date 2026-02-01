@@ -26,6 +26,16 @@
       details[open] > summary {
         list-style-type: '▼';
       }
+
+      ol {
+        counter-reset: item;
+        list-style-type: none;
+      }
+
+      ol li:before {
+        content: 'Track ' counter(item, decimal-leading-zero) '. ';
+        counter-increment: item;
+      }
     </style>
   </head>
   <body>
