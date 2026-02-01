@@ -31,7 +31,7 @@
     {{ end }}
     <h2>{{ .Info.Album }}</h2>
     <hr />
-    <p>Progress: {{ len .Info.Ripped }} / {{ .Info.TotalTracks }}.</p>
+    <h2>Progress: {{ len .Info.Ripped }} / {{ .Info.TotalTracks }}</h2>
     <ol>
       {{ range $v := .Info.Ripped }}
         <li>{{ $v }} ✅</li>
