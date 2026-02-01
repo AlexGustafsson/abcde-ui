@@ -27,10 +27,11 @@
       <input type="text" required name="fallback" placeholder="Fallback name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
       <input type="submit" value="Rip" />
     </form>
+    <p id="status"></p>
     {{ end }}
     <h2>{{ .Info.Album }}</h2>
     <hr />
-    Progress: {{ len .Info.Ripped }} / {{ .Info.TotalTracks }}.
+    <p>Progress: {{ len .Info.Ripped }} / {{ .Info.TotalTracks }}.</p>
     <ol>
       {{ range $v := .Info.Ripped }}
         <li>{{ $v }} ✅</li>
@@ -53,5 +54,29 @@
       {{ .Logs }}
       </code></pre>
     </details>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const query = new URLSearchParams(location.hash.substring(1))
+        history.replaceState(null, null, ' ');
+
+        if (!query) {
+          return
+        }
+
+        const error = query.get('error')
+        if (error) {
+          let message = 'An unknown error occured. See logs below.'
+          switch (error) {
+            case 'running':
+              message = 'A rip is already in progress.'
+              break;
+            case 'internal':
+              message = 'An internal error occured. See logs below.'
+              break;
+          }
+          document.getElementById("status").innerText = message
+        }
+      })
+    </script>
   </body>
 </html>
