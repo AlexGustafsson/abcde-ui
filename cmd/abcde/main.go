@@ -5,7 +5,10 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"path/filepath"
+	"strings"
 	"syscall"
 
 	"github.com/AlexGustafsson/abcde-ui/internal/abcde"
@@ -19,9 +22,16 @@ func main() {
 		GrapevineTopic:    os.Getenv("ABCDE_UI_GRAPEVINE_TOPIC"),
 	}
 
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("GET /livez", healthcheck)
+	mux.HandleFunc("GET /readyz", healthcheck)
+
+	mux.Handle("/", server.NewServer(runner))
+
 	server := &http.Server{
 		Addr:    ":8080",
-		Handler: server.NewServer(runner),
+		Handler: mux,
 	}
 
 	go func() {
@@ -46,5 +56,31 @@ func main() {
 	if err != http.ErrServerClosed && err != nil {
 		slog.Error("Failed to serve", slog.Any("error", err))
 		os.Exit(1)
+	}
+}
+
+func healthcheck(w http.ResponseWriter, r *http.Request) {
+	errors := make([]string, 0)
+
+	{
+		sr, _ := filepath.Glob("/dev/sr*")
+		cdrom, _ := filepath.Glob("/dev/cdrom")
+		if len(sr)+len(cdrom) == 0 {
+			errors = append(errors, "No disk reader available")
+		}
+	}
+
+	{
+		_, err := exec.LookPath("abcde")
+		if err != nil {
+			errors = append(errors, "Can't find abcde")
+		}
+	}
+
+	if len(errors) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(strings.Join(errors, "\n")))
 	}
 }
