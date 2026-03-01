@@ -78,3 +78,18 @@ spec:
 # ...ingress(es)
 # ...certificate
 ```
+
+## Tips
+
+### Manually ripping CDs
+
+If a CD rip fails to start, typically due to failed lookups of singles, you can
+attach a terminal and run a command like this, which will ignore lookups and
+just rip the cd.
+
+```shell
+abcde -n -Q cddb -N -o flac -p
+```
+
+Remember that in this case, abcde-ui can't create a unique directory for the rip
+so be sure to rename the output directory so that it doesn't get overwritten.
