@@ -16,8 +16,14 @@ import (
 )
 
 func main() {
+	device := os.Getenv("ABCDE_UI_DEVICE")
+	if device == "" {
+		device = "/dev/cdrom"
+	}
+
 	runner := &abcde.Runner{
 		Dir:               ".",
+		Device:            device,
 		GrapevineEndpoint: os.Getenv("ABCDE_UI_GRAPEVINE_ENDPOINT"),
 		GrapevineTopic:    os.Getenv("ABCDE_UI_GRAPEVINE_TOPIC"),
 	}

@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -22,6 +23,8 @@ var (
 type Runner struct {
 	// Dir specifies the working directory of the command.
 	Dir string
+	// Device is the path to the device (e.g. /dev/sr0).
+	Device string
 	// GrapevineEndpoint specifies a Grapvine-compatible notification endpoint.
 	// Optional.
 	GrapevineEndpoint string
@@ -43,16 +46,24 @@ func (r *Runner) Start(fallback string) error {
 		return ErrAlreadyRunning
 	}
 
+	file, err := os.Open(r.Device)
+	if errors.Is(err, os.ErrNotExist) {
+		return fmt.Errorf("device does not exist")
+	} else if err != nil {
+		return fmt.Errorf("disk is not loaded: %w", err)
+	}
+	file.Close()
+
 	r.output.Reset()
 
-	cmd := Command()
+	cmd := Command(r.Device)
 	cmd.Dir = r.Dir
 	cmd.Stdout = &r.output
 	cmd.Stderr = &r.output
 
 	slog.Info("Starting abcde")
 	r.err = nil
-	err := cmd.Start()
+	err = cmd.Start()
 	if err != nil {
 		r.err = err
 		return err
